@@ -87,3 +87,39 @@ WHERE (
 
 - `subqueries.sql`: Contains the non-correlated and correlated subquery examples.
 - `README.md`: This documentation.
+
+# 📊 Aggregations and Window Functions – Airbnb Clone
+
+This section explores SQL aggregation and window functions using the Airbnb database schema.
+
+## 🔢 Queries Overview
+
+### 1. Total Bookings by Each User
+
+This query counts the total number of bookings made by each user using `COUNT` and `GROUP BY`.
+
+```sql
+SELECT
+    user_id,
+    COUNT(*) AS total_bookings
+FROM booking
+GROUP BY user_id;
+```
+
+### 2. Ranking Properties by Number of Bookings
+
+This query uses the `RANK()` window function to rank properties by how many times they've been booked.
+
+```sql
+SELECT
+    property_id,
+    COUNT(*) AS total_bookings,
+    RANK() OVER (ORDER BY COUNT(*) DESC) AS booking_rank
+FROM booking
+GROUP BY property_id;
+```
+
+## 📄 Files
+
+- `aggregations_and_window_functions.sql`: Contains the SQL queries
+- `README.md`: Documentation for the queries
