@@ -10,7 +10,8 @@ SELECT booking.booking_id,
     user.last_name,
     user.email
 FROM booking
-    INNER JOIN user ON booking.user_id = user.user_id;
+    INNER JOIN user ON booking.user_id = user.user_id
+ORDER BY booking.start_date DESC;
 -- 2. LEFT JOIN: Retrieve all properties and their reviews (include properties with no reviews)
 SELECT property.property_id,
     property.name AS property_name,
