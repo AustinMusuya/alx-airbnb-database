@@ -17,7 +17,9 @@ SELECT b.booking_id,
 FROM booking b
     JOIN user u ON b.user_id = u.user_id
     JOIN property p ON b.property_id = p.property_id
-    LEFT JOIN payment pay ON b.booking_id = pay.booking_id;
+    LEFT JOIN payment pay ON b.booking_id = pay.booking_id
+WHERE b.status = 'confirmed'
+    AND p.location = 'Nairobi';
 -- ✅ Refactored Query: Optimized using only required columns, LEFT JOIN for users and payments
 EXPLAIN ANALYZE
 SELECT b.booking_id,
@@ -31,4 +33,6 @@ SELECT b.booking_id,
 FROM booking b
     LEFT JOIN user u ON b.user_id = u.user_id
     LEFT JOIN property p ON b.property_id = p.property_id
-    LEFT JOIN payment pay ON b.booking_id = pay.booking_id;
+    LEFT JOIN payment pay ON b.booking_id = pay.booking_id
+WHERE b.status = 'confirmed'
+    AND p.location = 'Nairobi';
