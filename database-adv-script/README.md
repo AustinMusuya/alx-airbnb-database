@@ -90,13 +90,15 @@ WHERE (
 
 # 📊 Aggregations and Window Functions – Airbnb Clone
 
-This section explores SQL aggregation and window functions using the Airbnb database schema.
+This document demonstrates how to use SQL aggregation and window functions within the context of an Airbnb-style booking database. The queries showcase techniques to analyze user activity and property popularity.
+
+---
 
 ## 🔢 Queries Overview
 
 ### 1. Total Bookings by Each User
 
-This query counts the total number of bookings made by each user using `COUNT` and `GROUP BY`.
+This query calculates the total number of bookings each user has made. It uses the `COUNT` aggregation function and groups the results by `user_id`.
 
 ```sql
 SELECT
@@ -106,20 +108,42 @@ FROM booking
 GROUP BY user_id;
 ```
 
+---
+
 ### 2. Ranking Properties by Number of Bookings
 
-This query uses the `RANK()` window function to rank properties by how many times they've been booked.
+To rank properties based on how often they are booked, we first aggregate total bookings per `property_id` using a subquery. Then, we apply two different window functions:
+
+- `RANK()` to assign the same rank to properties with equal bookings (non-unique)
+- `ROW_NUMBER()` to assign a unique order to each row (no ties)
 
 ```sql
 SELECT
     property_id,
-    COUNT(*) AS total_bookings,
-    RANK() OVER (ORDER BY COUNT(*) DESC) AS booking_rank
-FROM booking
-GROUP BY property_id;
+    total_bookings,
+    RANK() OVER (ORDER BY total_bookings DESC) AS booking_rank,
+    ROW_NUMBER() OVER (ORDER BY total_bookings DESC) AS booking_row_number
+FROM (
+    SELECT
+        property_id,
+        COUNT(*) AS total_bookings
+    FROM booking
+    GROUP BY property_id
+) AS property_bookings;
 ```
 
-## 📄 Files
+---
 
-- `aggregations_and_window_functions.sql`: Contains the SQL queries
-- `README.md`: Documentation for the queries
+## 🧠 Why Both RANK() and ROW_NUMBER()?
+
+- `RANK()` is helpful when you want to preserve the idea of ties. If two properties have the same number of bookings, they’ll get the same rank (e.g., 1, 2, 2, 4).
+- `ROW_NUMBER()` is useful when you need a strict ordering (e.g., pagination or generating unique row IDs), even if some values are the same (e.g., 1, 2, 3, 4).
+
+---
+
+## 📄 Files Included
+
+- `aggregations_and_window_functions.sql`: Final SQL queries using aggregation and window functions
+- `README.md`: This documentation for understanding query purpose and structure
+
+---
